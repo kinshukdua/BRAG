@@ -15,6 +15,14 @@ This project is a chatbot to interact with a given document i.e. a knowledge sou
 
 ## Architecture
 
+## Installation
+
+Will be replaced with DOCKERFILE and requirements.txt
+
+```python
+pip install langchain[llms]
+```
+
 ## Algorithm
 
 1. Store Documents
