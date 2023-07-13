@@ -2,7 +2,7 @@
 # see for original https://github.com/hwchase17/langchain/blob/master/langchain/chains/conversational_retrieval/prompts.py
 from langchain.prompts.prompt import PromptTemplate
 
-_template = """Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in the Follow Up Input language.
+_template = """Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in the Follow Up Input language only.
 
 Chat History:
 {chat_history}
