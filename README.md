@@ -10,8 +10,8 @@ This project is a chatbot to interact with a given document i.e. a knowledge sou
 ## Additional Features (WIP)
 - [x] Evaluation of the answers - via RAGAS
 - [x] Multi-lingual support - via OpenAI support
-- [x] Speech Compatibility (TtS and StT) - S
-- [ ] Basic GUI
+- [x] Speech Compatibility (TtS and StT) - via SpeechRecognition and gTTS
+- [x] Basic GUI - Barebones HTML (only for testing)
 
 ## Architecture
 

@@ -34,9 +34,9 @@ class TextQuery:
         self.memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
         self.history = []
 
-    def ask(self, question: str) -> str:
+    def ask(self, question: str) -> tuple(str,str):
         """
-        Ask a question and get a response.
+        Ask a question and get a response along with relevant context.
 
         Args:
             question (str): The question to ask.
@@ -79,3 +79,5 @@ class TextQuery:
         """
         self.db = None
         self.rag = None
+        self.memory = None
+        self.history = None
