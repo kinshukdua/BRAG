@@ -11,10 +11,11 @@ def index():
 @app.route('/upload', methods=['POST'])
 def upload_file():
     global uploaded_file
+    print(request)
     file = request.files['file']
     if file:
-        file.save(f"/uploads/{file.filename}")
-        uploaded_file = f"/uploads/{file.filename}"
+        file.save(f"{file.filename}")
+        uploaded_file = f"{file.filename}"
         return jsonify({'status': 'ok'})
     else:
         return jsonify({'status': 'error'})
