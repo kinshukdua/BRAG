@@ -9,16 +9,24 @@ from integrations import llm, embeddings
 from prompts import rag_multilingual_prompt
 
 class TextQuery:
+    """
+    TextQuery allows querying and retrieving information from a collection of documents.
+
+    It provides methods to ingest a document, ask questions, and retrieve relevant answers based on the ingested documents.
+    """
+
     def __init__(self) -> None:
+        """
+        Initialize the TextQuery class.
+        """
         self.embeddings = embeddings
         # I prefer MarkdownHeaderTextSplitter over RecursiveCharacterTextSplitter
         # self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=50,separators=["#", "##", "###","\n\n", "\n", "(?<=\. )", " ", ""])
-        self.text_splitter = MarkdownHeaderTextSplitter(headers_to_split_on =
-                                                        [
-                                                            ("#", "Header 1"),
-                                                            ("##", "Header 2"),
-                                                            ("###", "Header 3"),
-                                                        ])
+        self.text_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=[
+            ("#", "Header 1"),
+            ("##", "Header 2"),
+            ("###", "Header 3"),
+        ])
         self.llm = llm
         self.rag = None
         self.db = None
@@ -27,22 +35,47 @@ class TextQuery:
         self.history = []
 
     def ask(self, question: str) -> str:
+        """
+        Ask a question and get a response.
+
+        Args:
+            question (str): The question to ask.
+
+        Returns:
+            str: The response to the question.
+        """
         if self.rag is None:
             response = "Please, add a document."
         else:
             result = self.rag({"question": question, "chat_history": self.history})
             response = result["answer"]
             self.history.append((question, response))
-            
-        return response
+            source = result['source_documents'][0].page_content
+
+        return response, source
 
     def ingest(self, file_path: os.PathLike) -> None:
+        """
+        Ingest a document file and prepare it for retrieval.
+
+        Args:
+            file_path (os.PathLike): The path to the document file.
+        """
         loader = TextLoader(file_path)
         documents = loader.load()
         splitted_documents = self.text_splitter.split_text(documents.page_content)
         self.db = Chroma.from_documents(splitted_documents, self.embeddings).as_retriever()
-        self.rag = ConversationalRetrievalChain.from_llm(self.llm,self.db,self.memory,combine_docs_chain_kwargs={'prompt': rag_multilingual_prompt})
+        self.rag = ConversationalRetrievalChain.from_llm(
+            self.llm,
+            self.db,
+            self.memory,
+            combine_docs_chain_kwargs={'prompt': rag_multilingual_prompt},
+            return_source_documents=True
+        )
 
     def forget(self) -> None:
+        """
+        Forget the current document and reset the retriever.
+        """
         self.db = None
         self.rag = None
