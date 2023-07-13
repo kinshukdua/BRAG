@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, send_file, render_template
 import os
+from docquery import TextQuery
 
 app = Flask(__name__)
 uploaded_file = None
@@ -16,6 +17,7 @@ def upload_file():
     if file:
         file.save(f"{file.filename}")
         uploaded_file = f"{file.filename}"
+        rag.ingest(uploaded_file)
         return jsonify({'status': 'ok'})
     else:
         return jsonify({'status': 'error'})
@@ -59,4 +61,5 @@ def delete_file():
         return jsonify({'status': 'error', 'message': 'File not found'})
 
 if __name__ == '__main__':
+    rag = TextQuery()
     app.run()

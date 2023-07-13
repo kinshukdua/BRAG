@@ -3,7 +3,8 @@ from langchain.chat_models import ChatOpenAI # preferred over non chat
 from langchain.embeddings import OpenAIEmbeddings, LlamaCppEmbeddings
 from configparser import ConfigParser
 import os
-
+# llm = "SASA"
+# embeddings = "dsjdbsj"
 parser = ConfigParser()
 conf_file = parser.read("config.ini")
 if not conf_file:
@@ -33,8 +34,4 @@ elif parser['SETTINGS']['LLM'] == 'OpenAI':
     os.environ["OPENAI_API_KEY"] = parser['OPENAI']['key']
     embeddings = OpenAIEmbeddings()
     llm = ChatOpenAI(temperature=0)
-
-
-
-
 
