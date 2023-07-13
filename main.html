@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+</head>
+<body>
+    <h1>Chatbot</h1>
+
+    <h2>Upload File</h2>
+    <form id="upload-form" enctype="multipart/form-data">
+        <input type="file" name="file" id="file-input">
+        <button type="submit">Upload</button>
+    </form>
+
+    <h2>Chat</h2>
+    <textarea id="chat-input" rows="4" cols="50"></textarea>
+    <button onclick="sendChatRequest()">Send</button>
+    <div id="chat-output"></div>
+
+    <h2>Chat using Voice</h2>
+    <button onclick="startVoiceChat()">Start</button>
+    <button onclick="stopVoiceChat()">Stop</button>
+    <audio id="audio-output" controls></audio>
+
+    <h2>Delete File</h2>
+    <button onclick="deleteFile()">Delete</button>
+
+    <script>
+        function sendRequest(method, url, data = null) {
+            return new Promise(function(resolve, reject) {
+                var xhr = new XMLHttpRequest();
+                xhr.open(method, url, true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        resolve(xhr.responseText);
+                    } else {
+                        reject(xhr.statusText);
+                    }
+                };
+                xhr.onerror = function() {
+                    reject(xhr.statusText);
+                };
+                xhr.send(JSON.stringify(data));
+            });
+        }
+
+        function uploadFile(event) {
+            event.preventDefault();
+
+            var form = document.getElementById('upload-form');
+            var fileInput = document.getElementById('file-input');
+            var file = fileInput.files[0];
+
+            var formData = new FormData();
+            formData.append('file', file);
+
+            sendRequest('POST', '/upload', formData)
+                .then(function(response) {
+                    alert('File uploaded successfully!');
+                })
+                .catch(function(error) {
+                    alert('Error uploading file: ' + error);
+                });
+        }
+
+        function sendChatRequest() {
+            var input = document.getElementById('chat-input').value;
+            var requestData = { input: input };
+
+            sendRequest('POST', '/chat', requestData)
+                .then(function(response) {
+                    var output = document.getElementById('chat-output');
+                    output.innerHTML = response;
+                })
+                .catch(function(error) {
+                    alert('Error: ' + error);
+                });
+        }
+
+        function startVoiceChat() {
+            // Placeholder for voice chat implementation
+            alert('Starting voice chat...');
+        }
+
+        function stopVoiceChat() {
+            // Placeholder for voice chat implementation
+            alert('Stopping voice chat...');
+        }
+
+        function deleteFile() {
+            sendRequest('POST', '/delete')
+                .then(function(response) {
+                    alert('File deleted successfully!');
+                })
+                .catch(function(error) {
+                    alert('Error deleting file: ' + error);
+                });
+        }
+
+        document.getElementById('upload-form').addEventListener('submit', uploadFile);
+    </script>
+</body>
+</html>
