@@ -1,8 +1,12 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, render_template
 import os
 
 app = Flask(__name__)
 uploaded_file = None
+
+@app.route('/')
+def index():
+    return render_template('main.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
