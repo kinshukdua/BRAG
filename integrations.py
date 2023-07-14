@@ -19,7 +19,6 @@ if parser['SETTINGS']['LLM'] == 'Llama':
         embeddings = LlamaCppEmbeddings(
                                         model_path=model_path,
                                         n_gpu_layers=n_gpu_layers,
-                                        n_batch=n_batch
                                         )
 
         llm = LlamaCpp(

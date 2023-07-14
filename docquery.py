@@ -1,4 +1,5 @@
 import os
+from typing import Tuple
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
@@ -31,10 +32,10 @@ class TextQuery:
         self.rag = None
         self.db = None
         # Can be saved for restarting
-        self.memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+        #self.memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
         self.history = []
 
-    def ask(self, question: str) -> tuple(str,str):
+    def ask(self, question: str) -> Tuple[str,str]:
         """
         Ask a question and get a response along with relevant context.
 
@@ -63,12 +64,12 @@ class TextQuery:
         """
         loader = TextLoader(file_path)
         documents = loader.load()
-        splitted_documents = self.text_splitter.split_text(documents.page_content)
+        splitted_documents = self.text_splitter.split_text(documents[0].page_content)
         self.db = Chroma.from_documents(splitted_documents, self.embeddings).as_retriever()
         self.rag = ConversationalRetrievalChain.from_llm(
             self.llm,
             self.db,
-            self.memory,
+            #self.memory,
             combine_docs_chain_kwargs={'prompt': rag_multilingual_prompt},
             return_source_documents=True
         )
@@ -79,5 +80,5 @@ class TextQuery:
         """
         self.db = None
         self.rag = None
-        self.memory = None
+        #self.memory = None
         self.history = None
