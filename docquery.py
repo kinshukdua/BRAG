@@ -1,6 +1,5 @@
 import os
 from typing import Tuple
-from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
 from langchain.document_loaders import TextLoader #,PyPDFium2Loader commenting for future
@@ -62,10 +61,14 @@ class TextQuery:
         Args:
             file_path (os.PathLike): The path to the document file.
         """
-        loader = TextLoader(file_path)
-        documents = loader.load()
-        splitted_documents = self.text_splitter.split_text(documents[0].page_content)
-        self.db = Chroma.from_documents(splitted_documents, self.embeddings).as_retriever()
+        db_dir = f"./{file_path}_db"
+        if not os.path.isdir(db_dir):
+            loader = TextLoader(file_path)
+            documents = loader.load()
+            splitted_documents = self.text_splitter.split_text(documents[0].page_content)
+            self.db = Chroma.from_documents(splitted_documents, self.embeddings, persist_directory=db_dir).as_retriever()
+        else:
+            self.db = Chroma(persist_directory=db_dir, embedding_function=self.embeddings).as_retriever()
         self.rag = ConversationalRetrievalChain.from_llm(
             self.llm,
             self.db,

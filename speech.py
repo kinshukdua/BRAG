@@ -1,5 +1,6 @@
 import speech_recognition as sr
 from gtts import gTTS
+from langdetect import detect
 
 class SpeechProcessor:
     def __init__(self):
@@ -8,7 +9,8 @@ class SpeechProcessor:
     def speak(self, text):
         # Create a temp file to store the audio
         audio_buffer = f"temp{hash(text)}.mp3"
-        output = gTTS(text=text, slow = False)
+        lang = detect(text)
+        output = gTTS(text=text, lang=lang, slow = False)
         output.save(audio_buffer)
         # Reset the buffer to the beginning
 
