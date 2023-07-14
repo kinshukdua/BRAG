@@ -14,6 +14,7 @@ This project is a chatbot to interact with a given document i.e. a knowledge sou
 - [x] Basic GUI - Barebones HTML (only for testing)
 
 ## Architecture
+![BRAG Architecture](https://github.com/kinshukdua/BRAG/blob/main/architecture.png?raw=true)
 
 ## Installation
 
