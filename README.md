@@ -20,7 +20,11 @@ This project is a chatbot to interact with a given document i.e. a knowledge sou
 Will be replaced with DOCKERFILE and requirements.txt
 
 ```python
-pip install langchain[llms]
+pip -r requirements.txt
+```
+
+```python
+python app.py
 ```
 
 ## Algorithm
